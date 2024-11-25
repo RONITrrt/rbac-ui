@@ -1,0 +1,182 @@
+/* src/App.css */
+
+/* Global styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f9ff;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #333;
+  line-height: 1.6;
+}
+
+h4, h6 {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+button {
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Login Page */
+.MuiBox-root {
+  max-width: 420px;
+  margin: 50px auto;
+  padding: 40px;
+  background-color: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.MuiTypography-root {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.MuiTextField-root {
+  margin-bottom: 20px;
+  border-radius: 6px;
+}
+
+.MuiButton-contained {
+  background-color: #1abc9c;
+  color: #fff;
+  margin-top: 20px;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.MuiButton-contained:hover {
+  background-color: #16a085;
+  transform: scale(1.05);
+}
+
+.MuiTypography-error {
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+/* Dashboard Page */
+.MuiBox-root {
+  background-color: #ffffff;
+  padding: 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  margin: 30px auto;
+}
+
+.MuiButton-contained {
+  background-color: #3498db;
+  color: #ffffff;
+  font-weight: 500;
+  padding: 10px 20px;
+  margin-top: 15px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.MuiButton-contained:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+}
+
+.MuiTypography-root {
+  font-size: 18px;
+  color: #34495e;
+  margin-bottom: 20px;
+}
+
+/* Role and User Management */
+.MuiBox-root {
+  margin-top: 20px;
+}
+
+.MuiButton-contained {
+  background-color: #9b59b6;
+  color: white;
+  font-weight: 500;
+}
+
+.MuiButton-contained:hover {
+  background-color: #8e44ad;
+}
+
+.MuiTextField-root {
+  margin-bottom: 20px;
+}
+
+.MuiFormControl-root {
+  margin-top: 20px;
+}
+
+.MuiTypography-root:hover {
+  color: #3498db;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Card-like sections for users and roles */
+.MuiBox-root {
+  padding: 20px;
+  margin: 15px 0;
+  background-color: #f8f9fa;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.MuiBox-root:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+/* Buttons with hover effect */
+button:hover {
+  transform: translateY(-2px);
+}
+
+/* Enhancing hover for rows and typography */
+.MuiTypography-root {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.MuiTypography-root:hover {
+  color: #e67e22;
+  cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .MuiBox-root {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .MuiButton-contained {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .MuiBox-root {
+    padding: 15px;
+  }
+
+  h4, h6 {
+    font-size: 20px;
+  }
+
+  .MuiButton-contained {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
