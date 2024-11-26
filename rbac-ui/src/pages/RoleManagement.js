@@ -1,6 +1,110 @@
 import React, { useState } from "react";
-import { Box, Typography, Button, TextField, FormControl, Select, MenuItem, InputLabel, Checkbox, ListItemText, Snackbar, Alert } from "@mui/material";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+// Basic styles for layout and UI design
+const containerStyle = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  height: "100vh",
+  backgroundColor: "#f7f9fc",
+  fontFamily: "'Roboto', sans-serif", // Updated font
+};
+
+const cardStyle = {
+  backgroundColor: "#fff",
+  borderRadius: "12px",
+  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+  padding: "40px",
+  maxWidth: "700px",
+  width: "100%",
+  margin: "20px",
+};
+
+const headerStyle = {
+  textAlign: "center",
+  fontSize: "36px",
+  marginBottom: "25px",
+  color: "#2e3a59",
+  fontWeight: "600",
+};
+
+const buttonStyle = {
+  padding: "14px 30px",
+  fontSize: "16px",
+  color: "#fff",
+  backgroundColor: "#6C63FF", // Vibrant purple-blue color
+  border: "none",
+  borderRadius: "8px",
+  cursor: "pointer",
+  marginTop: "20px",
+  transition: "all 0.3s ease",
+  width: "100%",
+  boxSizing: "border-box",
+};
+
+const backButtonStyle = {
+  backgroundColor: "#B0BEC5",
+};
+
+const inputStyle = {
+  padding: "12px 20px",
+  width: "100%",
+  marginBottom: "15px",
+  borderRadius: "8px",
+  border: "1px solid #ddd",
+  fontSize: "16px",
+  boxSizing: "border-box",
+  transition: "border-color 0.3s ease",
+};
+
+const inputFocusStyle = {
+  borderColor: "#6C63FF",
+};
+
+const successMessageStyle = {
+  color: "#388E3C",
+  textAlign: "center",
+  marginTop: "20px",
+};
+
+const permissionsContainerStyle = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "12px",
+  marginBottom: "20px",
+};
+
+const permissionsStyle = {
+  display: "flex",
+  alignItems: "center",
+};
+
+const roleContainerStyle = {
+  marginTop: "30px",
+  textAlign: "center",
+  fontWeight: "500",
+};
+
+const roleListStyle = {
+  listStyleType: "none",
+  paddingLeft: "0",
+  marginTop: "10px",
+  color: "#2e3a59",
+};
+
+const roleListItemStyle = {
+  marginBottom: "10px",
+  backgroundColor: "#EDEBFF",
+  padding: "12px",
+  borderRadius: "8px",
+  transition: "transform 0.3s ease-in-out",
+};
+
+const roleListItemHoverStyle = {
+  transform: "scale(1.05)",
+  boxShadow: "0 8px 15px rgba(0, 0, 0, 0.1)",
+};
 
 const RoleManagement = () => {
   const [roleName, setRoleName] = useState("");
@@ -10,9 +114,11 @@ const RoleManagement = () => {
     { id: 2, name: "ML Engineer", permissions: ["Read", "Write", "Delete"] },
     { id: 3, name: "HR", permissions: ["Read"] }
   ]); // List of existing roles with some dummy data
-  const [availablePermissions, setAvailablePermissions] = useState(["Read", "Write", "Delete"]); // Example permissions
+  const [availablePermissions, setAvailablePermissions] = useState(["Read", "Write", "Delete"]);
   const [successMessage, setSuccessMessage] = useState(""); // Success message state
-
+  
+  const navigate = useNavigate();  // Initialize the useNavigate hook
+  
   const handleAddRole = async () => {
     if (!roleName) {
       // Ensure role name is provided
@@ -45,93 +151,82 @@ const RoleManagement = () => {
 
   // Handle permission change for role
   const handlePermissionChange = (event) => {
-    setPermissions(event.target.value);
+    const value = event.target.value;
+    setPermissions(prevPermissions => 
+      prevPermissions.includes(value) 
+        ? prevPermissions.filter(permission => permission !== value) 
+        : [...prevPermissions, value]
+    );
+  };
+
+  const handleBackToDashboard = () => {
+    navigate("/dashboard");
   };
 
   return (
-    <Box sx={{ padding: 3, backgroundColor: "#f4f6f9", borderRadius: 2 }}>
-      <Typography variant="h4" mb={3} sx={{ color: "#1976d2" }}>Role Management</Typography>
+    <div style={containerStyle}>
+      <div style={cardStyle}>
+        <h2 style={headerStyle}>Role Management</h2>
 
-      {/* Add Role Form */}
-      <TextField
-        label="Role Name"
-        value={roleName}
-        onChange={(e) => setRoleName(e.target.value)}
-        fullWidth
-        margin="normal"
-        sx={{ backgroundColor: "#fff", borderRadius: 1 }}
-      />
+        <div>
+          <label>Role Name:</label>
+          <input 
+            type="text" 
+            style={inputStyle}
+            value={roleName} 
+            onChange={(e) => setRoleName(e.target.value)} 
+            placeholder="Enter role name" 
+            onFocus={(e) => e.target.style.borderColor = "#6C63FF"}
+            onBlur={(e) => e.target.style.borderColor = "#ddd"}
+          />
+        </div>
 
-      {/* Permissions Selection */}
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Permissions</InputLabel>
-        <Select
-          multiple
-          value={permissions}
-          onChange={handlePermissionChange}
-          renderValue={(selected) => selected.join(", ")}
-          sx={{ backgroundColor: "#fff", borderRadius: 1 }}
-          MenuProps={{
-            PaperProps: {
-              sx: {
-                maxHeight: 250, // Adds a max height for the dropdown
-                width: "300px", // Adjust the width of the dropdown
-              },
-            },
-          }}
-        >
-          {availablePermissions.map((permission, idx) => (
-            <MenuItem key={idx} value={permission} sx={{ padding: "8px 16px" }}> {/* Added padding to prevent overlap */}
-              <Checkbox checked={permissions.indexOf(permission) > -1} />
-              <ListItemText primary={permission} />
-            </MenuItem>
+        <div style={permissionsContainerStyle}>
+          <h3>Select Permissions</h3>
+          {availablePermissions.map((permission) => (
+            <div key={permission} style={permissionsStyle}>
+              <input 
+                type="checkbox" 
+                value={permission} 
+                checked={permissions.includes(permission)} 
+                onChange={handlePermissionChange} 
+              />
+              <span style={{ marginLeft: "8px" }}>{permission}</span>
+            </div>
           ))}
-        </Select>
-      </FormControl>
+        </div>
 
-      {/* Add Role Button */}
-      <Button
-        onClick={handleAddRole}
-        variant="contained"
-        sx={{ marginTop: 2, backgroundColor: "#1976d2", '&:hover': { backgroundColor: "#1565c0" } }}
-      >
-        Add Role
-      </Button>
+        <button style={buttonStyle} onClick={handleAddRole}>Add Role</button>
 
-      {/* Success Message */}
-      {successMessage && (
-        <Snackbar open={true} autoHideDuration={2000}>
-          <Alert severity="success">{successMessage}</Alert>
-        </Snackbar>
-      )}
+        <button 
+          style={{...buttonStyle, ...backButtonStyle}} 
+          onClick={handleBackToDashboard}
+        >
+          Back to Dashboard
+        </button>
 
-      {/* Roles List */}
-      <Box sx={{ marginTop: 3 }}>
-        <Typography variant="h6" gutterBottom sx={{ color: "#1976d2" }}>Roles List</Typography>
-        {roles.length === 0 ? (
-          <Typography>No roles added yet.</Typography>
-        ) : (
-          roles.map((role) => (
-            <Box
-              key={role.id}
-              sx={{
-                marginBottom: 2,
-                border: '1px solid #ddd',
-                padding: 2,
-                borderRadius: 2,
-                backgroundColor: "#ffffff",
-                boxShadow: 2
-              }}
-            >
-              <Typography variant="h6" sx={{ color: "#333" }}>{role.name}</Typography>
-              <Typography variant="body2" color="textSecondary">
-                Permissions: {role.permissions.join(", ")}
-              </Typography>
-            </Box>
-          ))
+        {successMessage && (
+          <div style={successMessageStyle}>
+            {successMessage}
+          </div>
         )}
-      </Box>
-    </Box>
+
+        <div style={roleContainerStyle}>
+          <h3>Existing Roles</h3>
+          <ul style={roleListStyle}>
+            {roles.map((role) => (
+              <li 
+                key={role.id} 
+                style={{...roleListItemStyle, "&:hover": roleListItemHoverStyle}}
+                className="role-list-item"
+              >
+                {role.name} - {role.permissions.join(", ")}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 };
 
