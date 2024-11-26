@@ -1,7 +1,7 @@
 // src/pages/Login.js
 import React, { useState } from "react";
 import { Box, TextField, Button, Typography, Alert } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import Link
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -121,7 +121,7 @@ const Login = () => {
           fontSize: "0.9rem",
         }}
       >
-        Don't have an account? <a href="/signup">Sign Up</a>
+        Don't have an account? <Link to="/signup">Sign Up</Link>
       </Typography>
     </Box>
   );
