@@ -14,6 +14,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const UserManagement = () => {
   const [username, setUsername] = useState("");
@@ -27,6 +28,8 @@ const UserManagement = () => {
   const [availablePermissions] = useState(["Read", "Write", "Delete"]); // Predefined permissions
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState(""); // State for success message
+
+  const navigate = useNavigate(); // For navigation
 
   const handleAddUser = async () => {
     if (!username || !role) {
@@ -74,8 +77,17 @@ const UserManagement = () => {
   };
 
   return (
-    <Box sx={{ padding: 3, maxWidth: "600px", margin: "0 auto", backgroundColor: "#f4f6f9", borderRadius: 2 }}>
-      <Typography variant="h4" mb={3} sx={{ color: "#1976d2" }}>
+    <Box
+      sx={{
+        padding: 4,
+        maxWidth: "800px",
+        margin: "30px auto",
+        backgroundColor: "#f9fafc",
+        borderRadius: 3,
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <Typography variant="h4" mb={4} sx={{ color: "#1565c0", fontWeight: 600 }}>
         User Management
       </Typography>
 
@@ -129,9 +141,10 @@ const UserManagement = () => {
         onClick={handleAddUser}
         variant="contained"
         sx={{
-          marginTop: 2,
+          marginTop: 3,
           backgroundColor: "#1976d2",
           "&:hover": { backgroundColor: "#1565c0" },
+          width: "100%",
         }}
         disabled={loading} // Disable button while loading
       >
@@ -146,8 +159,8 @@ const UserManagement = () => {
       )}
 
       {/* User List */}
-      <Box sx={{ marginTop: 3 }}>
-        <Typography variant="h6" gutterBottom sx={{ color: "#1976d2" }}>
+      <Box sx={{ marginTop: 4 }}>
+        <Typography variant="h5" gutterBottom sx={{ color: "#1565c0", fontWeight: 500 }}>
           Users List
         </Typography>
         {users.length === 0 ? (
@@ -162,7 +175,7 @@ const UserManagement = () => {
                 padding: 2,
                 borderRadius: 2,
                 backgroundColor: "#ffffff",
-                boxShadow: 2,
+                boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.1)",
               }}
             >
               <Typography variant="h6" sx={{ color: "#333" }}>
@@ -178,6 +191,21 @@ const UserManagement = () => {
           ))
         )}
       </Box>
+
+      {/* Back to Dashboard Button */}
+      <Button
+        variant="outlined"
+        onClick={() => navigate("/dashboard")}
+        sx={{
+          marginTop: 3,
+          borderColor: "#1976d2",
+          color: "#1976d2",
+          "&:hover": { backgroundColor: "#f0f4fc", borderColor: "#1565c0" },
+          width: "100%",
+        }}
+      >
+        Back to Dashboard
+      </Button>
     </Box>
   );
 };
