@@ -16,9 +16,14 @@ import {
   ListItemIcon,
   ListItemText,
   Badge,
+  Menu,
+  MenuItem,
+  Divider,
+  CssBaseline,
+  LinearProgress,
 } from "@mui/material";
 import {
-  Menu,
+  Menu as MenuIcon,
   PersonAdd,
   ManageAccounts,
   ExitToApp,
@@ -26,31 +31,34 @@ import {
   Brightness4,
   Brightness7,
   GroupWork,
+  Storage,
+  Speed,
+  Assessment,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip as ChartTooltip,
-  Legend,
-} from "chart.js";
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, ChartTooltip, Legend);
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [greeting, setGreeting] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [notifications] = useState([
+    { id: 1, message: "New user registered: John Doe", time: "2 hours ago" },
+    { id: 2, message: "System update completed successfully", time: "5 hours ago" },
+    { id: 3, message: "New role 'Editor' added to the system", time: "1 day ago" },
+    { id: 4, message: "Password change request for admin", time: "1 day ago" },
+  ]);
 
-  const handleLogout = () => {
-    navigate("/login");
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleNotificationClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleNotificationClose = () => {
+    setAnchorEl(null);
   };
 
   useEffect(() => {
@@ -60,28 +68,14 @@ const Dashboard = () => {
     else setGreeting("Good Evening");
   }, []);
 
-  const systemAnalyticsData = {
-    activeUsers: 1200,
-    totalUsers: 5000,
-    activeSessions: 320,
-    roleDistribution: { admin: 5, user: 1195 },
-  };
-
-  const recentNotifications = [
-    { id: 1, message: "New user registered: John Doe", time: "2 hours ago" },
-    { id: 2, message: "System update completed successfully", time: "5 hours ago" },
-    { id: 3, message: "New role 'Editor' added to the system", time: "1 day ago" },
-    { id: 4, message: "Password change request for admin", time: "1 day ago" },
-  ];
-
   const userGrowthData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
         label: "User Growth",
         data: [200, 400, 600, 800, 1000, 1200],
-        borderColor: darkMode ? "#80d6ff" : "#1565c0", // Line color
-        backgroundColor: darkMode ? "rgba(128, 214, 255, 0.3)" : "rgba(21, 101, 192, 0.3)", // Shaded area
+        borderColor: darkMode ? "#80d6ff" : "#1b5e20",
+        backgroundColor: darkMode ? "rgba(128, 214, 255, 0.3)" : "rgba(27, 94, 32, 0.3)",
         borderWidth: 2,
         tension: 0.3,
         pointRadius: 4,
@@ -89,19 +83,30 @@ const Dashboard = () => {
     ],
   };
 
+  const capacityUsed = 60; // Example: 60% of capacity is used
+
+  // Handle navigation to Role Management
+  const handleRoleManagementClick = () => {
+    navigate("/role-management");
+  };
+
+  // Handle navigation to User Management
+  const handleUserManagementClick = () => {
+    navigate("/user-management");
+  };
+
   return (
     <Box
       sx={{
         display: "flex",
         minHeight: "100vh",
-        backgroundColor: darkMode ? "#0d47a1" : "#e3f2fd", // Background gradient
+        backgroundColor: darkMode ? "#121212" : "#f4f6f8",
         color: darkMode ? "#ffffff" : "#000000",
-        backgroundImage: darkMode
-          ? "radial-gradient(circle, #1565c0, #0d47a1)"
-          : "radial-gradient(circle, #ffffff, #e3f2fd)",
         transition: "all 0.3s ease",
       }}
     >
+      <CssBaseline />
+
       {/* Sidebar */}
       <Drawer
         variant="temporary"
@@ -112,32 +117,46 @@ const Dashboard = () => {
             width: 250,
             backgroundColor: darkMode ? "#2c387e" : "#bbdefb",
             color: darkMode ? "#ffffff" : "#000000",
+            borderRight: "none", // Remove border to make it smoother
+            boxShadow: 3, // Add shadow for more depth
           },
         }}
       >
         <Box sx={{ padding: 2 }}>
-          <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 2 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: "bold",
+              marginBottom: 2,
+              letterSpacing: 1.5, // Improved letter spacing
+            }}
+          >
             Admin Panel
           </Typography>
           <List>
-            <ListItem button onClick={() => navigate("/dashboard")}>
-              <ListItemIcon>
-                <PersonAdd sx={{ color: darkMode ? "#ffffff" : "#000000" }} />
-              </ListItemIcon>
-              <ListItemText primary="Dashboard" />
-            </ListItem>
-            <ListItem button onClick={() => navigate("/user-management")}>
-              <ListItemIcon>
-                <ManageAccounts sx={{ color: darkMode ? "#ffffff" : "#000000" }} />
-              </ListItemIcon>
-              <ListItemText primary="User Management" />
-            </ListItem>
-            <ListItem button onClick={() => navigate("/role-management")}>
-              <ListItemIcon>
-                <GroupWork sx={{ color: darkMode ? "#ffffff" : "#000000" }} />
-              </ListItemIcon>
-              <ListItemText primary="Role Management" />
-            </ListItem>
+            {/* List Items with Hover Effects */}
+            {[
+              { text: "Dashboard", icon: <PersonAdd /> },
+              { text: "User Management", icon: <ManageAccounts /> },
+              { text: "Role Management", icon: <GroupWork /> },
+            ].map(({ text, icon }, index) => (
+              <ListItem
+                button
+                key={index}
+                onClick={() => navigate(`/${text.toLowerCase().replace(" ", "-")}`)}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: darkMode ? "#37474f" : "#e3f2fd", // Smooth hover color
+                    borderRadius: 2,
+                  },
+                }}
+              >
+                <ListItemIcon>
+                  {React.cloneElement(icon, { sx: { color: darkMode ? "#ffffff" : "#000000" } })}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
           </List>
         </Box>
       </Drawer>
@@ -145,16 +164,15 @@ const Dashboard = () => {
       {/* Main Content */}
       <Box sx={{ flexGrow: 1 }}>
         {/* Top Header */}
-        <AppBar position="sticky" sx={{ backgroundColor: darkMode ? "#1a237e" : "#1976d2", boxShadow: 3 }}>
+        <AppBar position="sticky" sx={{ backgroundColor: darkMode ? "#1a237e" : "#1976d2" }}>
           <Toolbar>
             <IconButton
               edge="start"
               color="inherit"
               aria-label="menu"
               onClick={() => setSidebarOpen(true)}
-              sx={{ display: { sm: "block" } }}
             >
-              <Menu />
+              <MenuIcon />
             </IconButton>
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
               Admin Dashboard
@@ -165,68 +183,80 @@ const Dashboard = () => {
               </IconButton>
             </Tooltip>
             <Tooltip title="Notifications">
-              <IconButton color="inherit" onClick={() => setShowNotifications(!showNotifications)}>
-                <Badge badgeContent={recentNotifications.length} color="error">
+              <IconButton color="inherit" onClick={handleNotificationClick}>
+                <Badge badgeContent={notifications.length} color="error">
                   <NotificationsActive />
                 </Badge>
               </IconButton>
             </Tooltip>
-            <Button color="inherit" onClick={handleLogout}>
-              Logout
-            </Button>
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleNotificationClose}>
+              {notifications.map((notification) => (
+                <MenuItem key={notification.id}>
+                  <Typography variant="body2">{notification.message}</Typography>
+                </MenuItem>
+              ))}
+              <Divider />
+              <MenuItem onClick={handleNotificationClose}>
+                <Typography textAlign="center">Close Notifications</Typography>
+              </MenuItem>
+            </Menu>
+            <Button color="inherit">Logout</Button>
           </Toolbar>
         </AppBar>
 
         {/* Welcome Section */}
         <Box sx={{ padding: 4, textAlign: "center" }}>
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: "bold",
-              marginBottom: 3,
-              color: darkMode ? "#bbdefb" : "#1565c0",
-            }}
-          >
+          <Typography variant="h4" sx={{ fontWeight: "bold", marginBottom: 3 }}>
             {greeting}, Welcome to the Admin Dashboard
           </Typography>
+        </Box>
 
-          {/* Cards Section */}
-          <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} sm={6} md={3}>
-              <Card
-                sx={{
-                  backgroundColor: darkMode ? "#1e88e5" : "#bbdefb",
-                  color: darkMode ? "#ffffff" : "#000000",
-                  boxShadow: 3,
-                  "&:hover": { transform: "scale(1.05)", transition: "0.3s" },
-                }}
-              >
+        {/* App Stats Section */}
+        <Box sx={{ padding: 4 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6} md={4}>
+              <Card sx={{ backgroundColor: darkMode ? "#2e7d32" : "#c8e6c9" }}>
                 <CardContent>
-                  <Typography variant="h5" fontWeight="bold">
-                    Active Users
+                  <Typography variant="h6" fontWeight="bold">
+                    App Performance
                   </Typography>
-                  <Typography variant="h4">{systemAnalyticsData.activeUsers}</Typography>
+                  <Typography variant="body2">Uptime: 99.9%</Typography>
+                  <Typography variant="body2">Avg. Response Time: 120ms</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Card sx={{ backgroundColor: darkMode ? "#bf360c" : "#ffccbc" }}>
+                <CardContent>
+                  <Typography variant="h6" fontWeight="bold">
+                    Capacity Usage
+                  </Typography>
+                  <LinearProgress variant="determinate" value={capacityUsed} />
+                  <Typography variant="body2" mt={1}>
+                    {capacityUsed}% used
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Card sx={{ backgroundColor: darkMode ? "#1565c0" : "#bbdefb" }}>
+                <CardContent>
+                  <Typography variant="h6" fontWeight="bold">
+                    Active Sessions
+                  </Typography>
+                  <Typography variant="h4">350</Typography>
                 </CardContent>
               </Card>
             </Grid>
           </Grid>
         </Box>
 
-        {/* Line Chart Section */}
-        <Box sx={{ padding: 4, textAlign: "center" }}>
-          <Typography
-            variant="h5"
-            fontWeight="bold"
-            sx={{
-              marginBottom: 2,
-              color: darkMode ? "#80d6ff" : "#1565c0",
-            }}
-          >
-            User Growth Analytics
+        {/* Graph Section */}
+        <Box sx={{ padding: 4 }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 2 }}>
+            User Growth Over Time
           </Typography>
-          <Box sx={{ height: 300, width: "100%", maxWidth: 600, margin: "0 auto" }}>
-            <Line data={userGrowthData} options={{ responsive: true, maintainAspectRatio: false }} />
-          </Box>
+          <Line data={userGrowthData} />
         </Box>
       </Box>
     </Box>
