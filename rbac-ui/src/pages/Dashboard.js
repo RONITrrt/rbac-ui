@@ -31,13 +31,31 @@ import {
   Brightness4,
   Brightness7,
   GroupWork,
-  Storage,
-  Speed,
-  Assessment,
 } from "@mui/icons-material";
 import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Title,
+  Tooltip as ChartTooltip,
+  Legend,
+} from "chart.js";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
+
+// Register Chart.js components
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Title,
+  ChartTooltip,
+  Legend
+);
 
 const Dashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -85,16 +103,6 @@ const Dashboard = () => {
 
   const capacityUsed = 60; // Example: 60% of capacity is used
 
-  // Handle navigation to Role Management
-  const handleRoleManagementClick = () => {
-    navigate("/role-management");
-  };
-
-  // Handle navigation to User Management
-  const handleUserManagementClick = () => {
-    navigate("/user-management");
-  };
-
   return (
     <Box
       sx={{
@@ -117,24 +125,14 @@ const Dashboard = () => {
             width: 250,
             backgroundColor: darkMode ? "#2c387e" : "#bbdefb",
             color: darkMode ? "#ffffff" : "#000000",
-            borderRight: "none", // Remove border to make it smoother
-            boxShadow: 3, // Add shadow for more depth
           },
         }}
       >
         <Box sx={{ padding: 2 }}>
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: "bold",
-              marginBottom: 2,
-              letterSpacing: 1.5, // Improved letter spacing
-            }}
-          >
+          <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 2 }}>
             Admin Panel
           </Typography>
           <List>
-            {/* List Items with Hover Effects */}
             {[
               { text: "Dashboard", icon: <PersonAdd /> },
               { text: "User Management", icon: <ManageAccounts /> },
@@ -146,7 +144,7 @@ const Dashboard = () => {
                 onClick={() => navigate(`/${text.toLowerCase().replace(" ", "-")}`)}
                 sx={{
                   "&:hover": {
-                    backgroundColor: darkMode ? "#37474f" : "#e3f2fd", // Smooth hover color
+                    backgroundColor: darkMode ? "#37474f" : "#e3f2fd",
                     borderRadius: 2,
                   },
                 }}
@@ -163,7 +161,6 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <Box sx={{ flexGrow: 1 }}>
-        {/* Top Header */}
         <AppBar position="sticky" sx={{ backgroundColor: darkMode ? "#1a237e" : "#1976d2" }}>
           <Toolbar>
             <IconButton
@@ -204,9 +201,8 @@ const Dashboard = () => {
           </Toolbar>
         </AppBar>
 
-        {/* Welcome Section */}
-        <Box sx={{ padding: 4, textAlign: "center" }}>
-          <Typography variant="h4" sx={{ fontWeight: "bold", marginBottom: 3 }}>
+        <Box sx={{ padding: 4 }}>
+          <Typography variant="h4" sx={{ fontWeight: "bold", textAlign: "center" }}>
             {greeting}, Welcome to the Admin Dashboard
           </Typography>
         </Box>
